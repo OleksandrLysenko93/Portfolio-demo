@@ -3,6 +3,8 @@ package OleksandrLysenko93.projects.portfoliodemo.domain.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -10,7 +12,7 @@ import java.util.Set;
 @Data @NoArgsConstructor @AllArgsConstructor @Builder
 @EqualsAndHashCode(of = "username")
 @ToString(exclude = "password")
-public class User {
+public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,6 +28,6 @@ public class User {
     @CollectionTable(name = "users_roles",
     joinColumns = @JoinColumn(name = "username", referencedColumnName = "username"),
     indexes = @Index(name = "users_roles_username_idx", columnList = "username"))
-    private Set<String> roles;
+    private Set<String> roles = new HashSet<>();
 
 }
