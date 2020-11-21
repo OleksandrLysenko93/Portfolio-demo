@@ -9,6 +9,6 @@ logging:
   level:
     root: INFO
     sql: DEBUG
-    OleksandrLysenko93.projects.portfoliodemo
-    
+    OleksandrLysenko93.projects.portfoliodemo: DEBUG
+
 

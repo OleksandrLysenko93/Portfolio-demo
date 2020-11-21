@@ -24,9 +24,8 @@ public class User {
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "users_roles",
-            joinColumns = @JoinColumn(name = "username", referencedColumnName = "username"),
-            indexes = @Index(name = "users_roles_username_idx", columnList = "username"))
-    @Column(name = "role")
+    joinColumns = @JoinColumn(name = "username", referencedColumnName = "username"),
+    indexes = @Index(name = "users_roles_username_idx", columnList = "username"))
     private Set<String> roles;
 
 }
