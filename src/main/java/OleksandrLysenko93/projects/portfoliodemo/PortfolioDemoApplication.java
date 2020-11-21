@@ -1,4 +1,4 @@
-package OleksandrLysenko93.portfolio.portfolio.demo;
+package OleksandrLysenko93.projects.portfoliodemo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

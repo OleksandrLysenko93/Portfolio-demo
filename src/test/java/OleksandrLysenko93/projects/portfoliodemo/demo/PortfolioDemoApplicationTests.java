@@ -1,4 +1,4 @@
-package OleksandrLysenko93.portfolio.portfolio.demo;
+package OleksandrLysenko93.projects.portfoliodemo.demo;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
