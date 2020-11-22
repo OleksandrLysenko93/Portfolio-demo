@@ -6,6 +6,7 @@ import OleksandrLysenko93.projects.portfoliodemo.domain.model.User;
 import OleksandrLysenko93.projects.portfoliodemo.domain.model.UserDetails;
 import OleksandrLysenko93.projects.portfoliodemo.domain.repository.UserRepository;
 import OleksandrLysenko93.projects.portfoliodemo.exception.UserAlreadyExistsException;
+import OleksandrLysenko93.projects.portfoliodemo.web.command.EditUserCommand;
 import OleksandrLysenko93.projects.portfoliodemo.web.command.RegisterUserCommand;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
 
-@Service @Transactional
+@Service
 @Slf4j @RequiredArgsConstructor
 public class UserService {
 
@@ -24,6 +25,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Transactional
     public Long create(RegisterUserCommand registerUserCommand) {
         log.debug("Dane użytkownika do zapisania: {}", registerUserCommand);
 
@@ -34,16 +36,20 @@ public class UserService {
             throw new UserAlreadyExistsException(String.format("Użytkownik %s już istnieje", userToCreate.getUsername()));
         }
 
-        userToCreate.setActive(Boolean.TRUE);
-        userToCreate.setRoles(Set.of("ROLE_USER"));
         userToCreate.setPassword(passwordEncoder.encode(userToCreate.getPassword()));
-        userToCreate.setDetails(UserDetails.builder()
-                .user(userToCreate)
-                .build());
+        setDefaultCredentials(userToCreate);
         userRepository.save(userToCreate);
         log.debug("Zapisany użytkownik: {}", userToCreate);
 
         return userToCreate.getId();
+    }
+
+    private void setDefaultCredentials(User userToCreate) {
+        userToCreate.setActive(Boolean.TRUE);
+        userToCreate.setRoles(Set.of("ROLE_USER"));
+        userToCreate.setDetails(UserDetails.builder()
+                .user(userToCreate)
+                .build());
     }
 
     @Transactional
@@ -56,5 +62,19 @@ public class UserService {
         log.debug("Budowanie podsumowania danych użytkownika: {}", summary);
 
         return summary;
+    }
+
+    @Transactional
+    public boolean edit(EditUserCommand editUserCommand) {
+        log.debug("Dane usera do edycji", editUserCommand);
+
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.getAuthenticatedUser(username);
+        log.debug("Edycja usera: {}", user);
+
+        user = userConverter.from(editUserCommand, user);
+        log.debug("Zmodyfikowany user: {}", user.getDetails());
+
+        return true;
     }
 }

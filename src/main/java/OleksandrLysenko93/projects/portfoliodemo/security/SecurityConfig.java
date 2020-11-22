@@ -33,10 +33,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .mvcMatchers("/register").permitAll()
-                .mvcMatchers("/login").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .formLogin();
+                    .mvcMatchers("/register").permitAll()
+                    .mvcMatchers("/login").permitAll()
+                    .anyRequest().authenticated()
+                    .and()
+                .formLogin()
+                    .defaultSuccessUrl("/profile", true);
+
     }
 }

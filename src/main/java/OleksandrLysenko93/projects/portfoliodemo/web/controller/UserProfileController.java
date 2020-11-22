@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -22,11 +23,15 @@ public class UserProfileController {
 
     private final UserService userService;
 
+    @ModelAttribute
+    public UserSummary userSummary() {
+        return userService.getCurrentUserSummary();
+    }
+
     @GetMapping
     public String getProfilePage(Model model) {
-        UserSummary summary = userService.getCurrentUserSummary();
-        EditUserCommand editUserCommand = createEditUserCommand(summary);
-        model.addAttribute(summary);
+        EditUserCommand editUserCommand = createEditUserCommand(userSummary());
+        model.addAttribute(userSummary());
         model.addAttribute(editUserCommand);
         return "user/profile";
     }
@@ -41,8 +46,24 @@ public class UserProfileController {
 
     @PostMapping("/edit")
     public String editUserProfile(@Valid EditUserCommand editUserCommand, BindingResult bindings) {
-        log.debug("Dane profilu usera do zapisu :{}" );
-        return "redirect:/profile";
+        log.debug("Dane profilu usera do zapisu :{}", editUserCommand);
+
+        if (bindings.hasErrors()) {
+            log.debug("Błędne dane: {}", bindings.getAllErrors());
+            return "user/profile";
+        }
+
+        try {
+            boolean success = userService.edit(editUserCommand);
+            log.debug("Udana edycja danych: {}", success);
+            return "redirect:/profile";
+        } catch (RuntimeException re) {
+            log.warn(re.getLocalizedMessage());
+            log.debug("Błąd przy edycji danych");
+            bindings.rejectValue(null, null, "Wystąpił błąd");
+            return "user/profile";
+        }
+
     }
 
 }
