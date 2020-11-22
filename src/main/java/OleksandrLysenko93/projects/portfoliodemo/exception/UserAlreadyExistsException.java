@@ -1,5 +1,6 @@
 package OleksandrLysenko93.projects.portfoliodemo.exception;
 
+
 public class UserAlreadyExistsException extends RuntimeException {
 
     public UserAlreadyExistsException(String message) {
