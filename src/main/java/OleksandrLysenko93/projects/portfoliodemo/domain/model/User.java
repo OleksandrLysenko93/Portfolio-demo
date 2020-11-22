@@ -32,7 +32,7 @@ public class User implements Serializable {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private UserDetails details;
-
+//
 //    @OneToMany(mappedBy = "user")
 //    private Project project;
 }

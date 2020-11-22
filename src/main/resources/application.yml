@@ -4,11 +4,12 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
+  datasource:
+    url: jdbc:h2:mem:portfolioDB
 
 logging:
   level:
     root: INFO
     sql: DEBUG
     OleksandrLysenko93.projects.portfoliodemo: DEBUG
-
 

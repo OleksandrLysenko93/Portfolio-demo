@@ -17,6 +17,7 @@ public class CreateProjectCommand {
     @Size(min=3, max = 26)
     private String name;
     @URL
+    @NotBlank
     private String url;
     @NotBlank
     @Size(min=6, max = 160)
